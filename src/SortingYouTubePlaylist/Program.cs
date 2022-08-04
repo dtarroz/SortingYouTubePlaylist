@@ -1,6 +1,8 @@
-﻿try {
-    Console.WriteLine("Hello, World!");
+﻿using SortingYouTubePlaylist;
 
+try {
+    ConsoleArgument consoleArgument = ConsoleArgument.CreateFromArgs(args);
+    await ConsoleAction.ExecuteAsync(consoleArgument);
     return 0;
 }
 catch (Exception ex) {
