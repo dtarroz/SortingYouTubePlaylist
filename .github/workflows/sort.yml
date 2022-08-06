@@ -26,7 +26,7 @@ jobs:
     - name: Client Secret File
       uses: jsdaniell/create-json@1.1.2
       with:
-        name: "client_secrets.json"
+        name: "src/client_secrets.json"
         json: ${{ secrets.CLIENT_SECRETS_JSON }}
     - name: Sort PLaylist "En pause"
       run: dotnet run --project SortingYouTubePlaylist -- sort -p ${{ secrets.PLAYLIST_EN_PAUSE }}
