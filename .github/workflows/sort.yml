@@ -28,5 +28,10 @@ jobs:
       with:
         name: "src/client_secrets.json"
         json: ${{ secrets.CLIENT_SECRETS_JSON }}
+    - name: Token Response File
+      uses: jsdaniell/create-json@1.1.2
+      with:
+        name: "youtube-data-store/Google.Apis.Auth.OAuth2.Responses.TokenResponse-user"
+        json: ${{ secrets.TOKEN_RESPONSE_JSON }}
     - name: Sort PLaylist "En pause"
       run: dotnet run --project SortingYouTubePlaylist -- sort -p ${{ secrets.PLAYLIST_EN_PAUSE }}
