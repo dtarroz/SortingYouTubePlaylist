@@ -119,4 +119,20 @@ internal sealed class YoutubeSource
         VideoListResponse videoList = await listRequest.ExecuteAsync();
         return videoList.Items.Count == 1 ? videoList.Items[0] : throw new InvalidOperationException();
     }
+
+    public async Task UpdateItemPositionInPlaylistAsync(PlaylistItemId itemId, long position) {
+        var item = new Google.Apis.YouTube.v3.Data.PlaylistItem {
+            Id = itemId.ItemId,
+            Snippet = new PlaylistItemSnippet {
+                PlaylistId = itemId.PlaylistId,
+                ResourceId = new ResourceId {
+                    Kind = itemId.Kind,
+                    VideoId = itemId.VideoId
+                },
+                Position = position
+            }
+        };
+        var update = _youtubeService!.PlaylistItems.Update(item, "snippet");
+        await update.ExecuteAsync();
+    }
 }
