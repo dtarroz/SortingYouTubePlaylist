@@ -5,6 +5,7 @@ internal sealed class ConsoleArgument
     public string Action { get; init; } = null!;
     public string ClientSecretFile { get; init; } = null!;
     public string DataStoreDirectory { get; init; } = null!;
+    public string? PlaylistId { get; init; }
 
     private ConsoleArgument() { }
 
@@ -13,7 +14,8 @@ internal sealed class ConsoleArgument
         return new ConsoleArgument {
             Action = args[0],
             ClientSecretFile = GetValueFromKey(args, "-c") ?? "client_secrets.json",
-            DataStoreDirectory = GetValueFromKey(args, "-d") ?? "youtube-data-store"
+            DataStoreDirectory = GetValueFromKey(args, "-d") ?? "youtube-data-store",
+            PlaylistId = GetValueFromKey(args, "-p")
         };
     }
 
