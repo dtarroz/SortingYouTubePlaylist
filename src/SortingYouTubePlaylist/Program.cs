@@ -9,5 +9,6 @@ catch (Exception ex) {
     Console.WriteLine();
     Console.WriteLine("-- ERROR --");
     Console.WriteLine(ex.Message);
+    Console.WriteLine(ex.StackTrace);
     return 1;
 }
