@@ -24,6 +24,8 @@ jobs:
     - name: Test
       run: dotnet test --no-build --verbosity normal
     - name: Client Secret File
-      run: echo "${{ secrets.CLIENT_SECRETS_JSON }}" > client_secrets.json
+      run: echo "$CLIENT_SECRETS_JSON" > client_secrets.json
+      env:
+        CLIENT_SECRETS_JSON: ${{ secrets.CLIENT_SECRETS_JSON }}
     - name: Sort PLaylist "En pause"
       run: dotnet run --project SortingYouTubePlaylist -- sort -p ${{ secrets.PLAYLIST_EN_PAUSE }}
