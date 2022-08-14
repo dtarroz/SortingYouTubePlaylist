@@ -46,14 +46,21 @@ internal static class ConsoleAction
         items = items.Skip(4).ToList();
         int count = 0;
         PlaylistItem? item;
+        DateTime thresholdDate = DateTime.Now.AddMonths(-1);
         while (items.Count > 0) {
             if (count < 3) {
+                item = null;
+                if (count == 0)
+                    item = items.Where(i => i.PublishedAt.CompareTo(thresholdDate) < 0 && i.Video.ChannelId != channelId)
+                                .MinBy(i => i.Video.Duration) ?? items.Where(i => i.PublishedAt.CompareTo(thresholdDate) < 0)
+                                                                      .MinBy(i => i.Video.Duration);
+                item ??= items.Where(i => i.Video.ChannelId != channelId).MinBy(i => i.Video.Duration)
+                         ?? items.MinBy(i => i.Video.Duration);
                 count++;
-                item = items.Where(i => i.Video.ChannelId != channelId).MinBy(i => i.Video.Duration) ?? items.MinBy(i => i.Video.Duration);
             }
             else {
-                count = 0;
                 item = items.Where(i => i.Video.ChannelId != channelId).MinBy(i => i.PublishedAt) ?? items.MinBy(i => i.PublishedAt);
+                count = 0;
             }
             long position = items.First().Position;
             channelId = item!.Video.ChannelId;
