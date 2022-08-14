@@ -9,7 +9,7 @@ internal static class ConsoleAction
         _youtubeSource = new YoutubeSource(consoleArgument.ClientSecretFile, consoleArgument.DataStoreDirectory);
         switch (consoleArgument.Action.ToLower()) {
             case "authorize":
-                await AuthorizeAsync(consoleArgument);
+                await AuthorizeAsync();
                 break;
             case "sort":
                 await SortingPlaylist(consoleArgument);
@@ -25,7 +25,7 @@ internal static class ConsoleAction
             throw new Exception("La liste de lecture est manquante");
     }
 
-    private static async Task AuthorizeAsync(ConsoleArgument consoleArgument) {
+    private static async Task AuthorizeAsync() {
         Console.WriteLine("Demande d'autorisation à un compte Youtube");
         await _youtubeSource!.WebAuthorizeAsync();
         Console.WriteLine("Fait");
@@ -40,7 +40,10 @@ internal static class ConsoleAction
     }
 
     private static async Task UpdateItemPositionsAsync(List<PlaylistItem> items) {
-        string channelId = "";
+        if (items.Count < 6)
+            return;
+        string channelId = items[3].Video.ChannelId;
+        items = items.Skip(4).ToList();
         int count = 0;
         PlaylistItem? item;
         while (items.Count > 0) {
