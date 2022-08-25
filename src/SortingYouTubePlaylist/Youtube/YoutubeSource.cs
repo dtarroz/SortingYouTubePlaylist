@@ -46,7 +46,7 @@ internal sealed class YoutubeSource
         string nextPageToken = "";
         while (nextPageToken != null) {
             PlaylistItemListResponse playListItems = await GetPlayListItemsAsync(playListId, nextPageToken);
-            foreach (var item in playListItems.Items.Where(i => i.Status.PrivacyStatus != "private"))
+            foreach (var item in playListItems.Items.Where(IsStatusValid))
                 items.Add(await ConvertToAsync(item));
             nextPageToken = playListItems.NextPageToken;
         }
@@ -88,6 +88,10 @@ internal sealed class YoutubeSource
         playlistRequest.MaxResults = 50;
         playlistRequest.PageToken = nextPageToken;
         return await playlistRequest.ExecuteAsync();
+    }
+
+    private static bool IsStatusValid(Google.Apis.YouTube.v3.Data.PlaylistItem item) {
+        return item.Status.PrivacyStatus != "private" && item.Status.PrivacyStatus != "privacyStatusUnspecified";
     }
 
     private async Task<PlaylistItem> ConvertToAsync(Google.Apis.YouTube.v3.Data.PlaylistItem item) {
