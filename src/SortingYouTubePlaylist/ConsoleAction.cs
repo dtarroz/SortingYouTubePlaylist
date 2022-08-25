@@ -35,16 +35,18 @@ internal static class ConsoleAction
         Console.WriteLine("Récupération des informations sur les vidéos de la liste de lecture...");
         List<PlaylistItem> items = await _youtubeSource!.GetItemsFromPlaylistAsync(consoleArgument.PlaylistId!);
         Console.WriteLine("Mise à jour des positions des vidéos dans la liste de lecture...");
-        await UpdateItemPositionsAsync(items);
+        int countPositionChanged = await UpdateItemPositionsAsync(items);
+        Console.WriteLine($"{countPositionChanged} vidéo(s) déplacé(s) dans la playlist");
         Console.WriteLine("Fait");
     }
 
-    private static async Task UpdateItemPositionsAsync(List<PlaylistItem> items) {
+    private static async Task<int> UpdateItemPositionsAsync(List<PlaylistItem> items) {
         if (items.Count < 6)
-            return;
+            return 0;
         string channelId = items[3].Video.ChannelId;
         items = items.Skip(4).ToList();
         int count = 0;
+        int countPositionChanged = 0;
         PlaylistItem? item;
         DateTime thresholdDate = DateTime.Now.AddMonths(-1);
         while (items.Count > 0) {
@@ -66,10 +68,12 @@ internal static class ConsoleAction
             channelId = item!.Video.ChannelId;
             items.Remove(item);
             if (item.Position != position) {
+                countPositionChanged++;
                 await _youtubeSource!.UpdateItemPositionInPlaylistAsync(item.Id, position);
                 foreach (PlaylistItem itemPosition in items.Where(i => i.Position < item.Position))
                     itemPosition.Position++;
             }
         }
+        return countPositionChanged;
     }
 }
