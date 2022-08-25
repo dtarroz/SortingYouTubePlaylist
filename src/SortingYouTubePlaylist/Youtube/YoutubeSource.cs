@@ -13,7 +13,7 @@ namespace SortingYouTubePlaylist;
 internal sealed class YoutubeSource
 {
     private readonly string _clientSecretFile;
-    private readonly string _dataStoreDirectory;
+    private readonly FileDataStore _dataStore;
     private YouTubeService? _youtubeService;
     private UserCredential? _credential;
     private const string User = "user";
@@ -21,23 +21,18 @@ internal sealed class YoutubeSource
 
     public YoutubeSource(string clientSecretFile, string dataStoreDirectory) {
         _clientSecretFile = clientSecretFile;
-        _dataStoreDirectory = dataStoreDirectory;
+        _dataStore = new FileDataStore(dataStoreDirectory, true);
     }
 
     public async Task WebAuthorizeAsync() {
         ClientSecrets clientSecrets = await GetClientSecretAsync();
-        FileDataStore dataStore = GetDataStore();
-        _credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(clientSecrets, _scope, User, CancellationToken.None, dataStore);
+        _credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(clientSecrets, _scope, User, CancellationToken.None, _dataStore);
     }
 
     private async Task<ClientSecrets> GetClientSecretAsync() {
         await using FileStream stream = new FileStream(_clientSecretFile, FileMode.Open, FileAccess.Read);
         GoogleClientSecrets googleClientSecrets = await GoogleClientSecrets.FromStreamAsync(stream);
         return googleClientSecrets.Secrets;
-    }
-
-    private FileDataStore GetDataStore() {
-        return new FileDataStore(_dataStoreDirectory, true);
     }
 
     public async Task<List<PlaylistItem>> GetItemsFromPlaylistAsync(string playListId) {
@@ -74,12 +69,13 @@ internal sealed class YoutubeSource
         ClientSecrets clientSecrets = await GetClientSecretAsync();
         return new GoogleAuthorizationCodeFlow.Initializer {
             ClientSecrets = clientSecrets,
-            Scopes = _scope
+            Scopes = _scope,
+            DataStore = _dataStore
         };
     }
 
     private async Task<TokenResponse> GetTokenResponseAsync() {
-        return await GetDataStore().GetAsync<TokenResponse>(User);
+        return await _dataStore.GetAsync<TokenResponse>(User);
     }
 
     private async Task<PlaylistItemListResponse> GetPlayListItemsAsync(string playListId, string nextPageToken) {
