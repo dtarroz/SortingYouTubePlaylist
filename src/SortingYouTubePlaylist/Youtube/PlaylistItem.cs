@@ -6,6 +6,7 @@ internal sealed class PlaylistItem
     public PlaylistItemVideo Video { get; set; } = null!;
     public DateTime PublishedAt { get; set; }
     public long Position { get; set; }
+    public string? Note { get; set; }
 }
 
 internal sealed class PlaylistItemId

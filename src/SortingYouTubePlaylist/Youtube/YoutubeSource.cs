@@ -103,7 +103,8 @@ internal sealed class YoutubeSource
                 ChannelId = item.Snippet.VideoOwnerChannelId
             },
             PublishedAt = item.Snippet.PublishedAt ?? throw new InvalidOperationException(),
-            Position = item.Snippet.Position ?? throw new InvalidOperationException()
+            Position = item.Snippet.Position ?? throw new InvalidOperationException(),
+            Note = item.ContentDetails.Note
         };
     }
 
@@ -120,7 +121,7 @@ internal sealed class YoutubeSource
         return videoList.Items.Count == 1 ? videoList.Items[0] : throw new InvalidOperationException();
     }
 
-    public async Task UpdateItemPositionInPlaylistAsync(PlaylistItemId itemId, long position) {
+    public async Task UpdateItemPositionAndNoteInPlaylistAsync(PlaylistItemId itemId, long position, string? note) {
         var item = new Google.Apis.YouTube.v3.Data.PlaylistItem {
             Id = itemId.ItemId,
             Snippet = new PlaylistItemSnippet {
@@ -130,9 +131,12 @@ internal sealed class YoutubeSource
                     VideoId = itemId.VideoId
                 },
                 Position = position
+            },
+            ContentDetails = new PlaylistItemContentDetails {
+                Note = note 
             }
         };
-        var update = _youtubeService!.PlaylistItems.Update(item, "snippet");
+        var update = _youtubeService!.PlaylistItems.Update(item, "snippet,contentDetails");
         await update.ExecuteAsync();
     }
 }
