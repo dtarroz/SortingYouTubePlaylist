@@ -44,32 +44,38 @@ internal static class ConsoleAction
         if (items.Count < 6)
             return 0;
         string channelId = items[3].Video.ChannelId;
+        string? note = items[3].Note;
         items = items.Skip(4).ToList();
+        if (note != null)
+            while (items.Count > 0 && items[0].Note == note) {
+                channelId = items[0].Video.ChannelId;
+                items.Remove(items[0]);
+            }
         int count = 0;
         int countPositionChanged = 0;
         PlaylistItem? item;
         DateTime thresholdDate = DateTime.Now.AddMonths(-1);
         while (items.Count > 0) {
+            List<PlaylistItem> nextItems = items.Where(i => i.Video.ChannelId != channelId).ToList();
             if (count < 3) {
-                item = null;
+                item = count == 0 ? nextItems.Where(i => i.PublishedAt.CompareTo(thresholdDate) < 0).MinBy(i => i.Video.Duration) : null;
+                item ??= nextItems.MinBy(i => i.Video.Duration);
+                item ??= items.MinBy(i => i.Video.Duration);
                 if (count == 0)
-                    item = items.Where(i => i.PublishedAt.CompareTo(thresholdDate) < 0 && i.Video.ChannelId != channelId)
-                                .MinBy(i => i.Video.Duration) ?? items.Where(i => i.PublishedAt.CompareTo(thresholdDate) < 0)
-                                                                      .MinBy(i => i.Video.Duration);
-                item ??= items.Where(i => i.Video.ChannelId != channelId).MinBy(i => i.Video.Duration)
-                         ?? items.MinBy(i => i.Video.Duration);
+                    note = item!.Note ?? Guid.NewGuid().ToString();
                 count++;
             }
             else {
-                item = items.Where(i => i.Video.ChannelId != channelId).MinBy(i => i.PublishedAt) ?? items.MinBy(i => i.PublishedAt);
+                item = nextItems.MinBy(i => i.PublishedAt);
+                item ??= items.MinBy(i => i.PublishedAt);
                 count = 0;
             }
             long position = items.First().Position;
             channelId = item!.Video.ChannelId;
             items.Remove(item);
-            if (item.Position != position) {
+            if (item.Position != position || item.Note != note) {
                 countPositionChanged++;
-                await _youtubeSource!.UpdateItemPositionInPlaylistAsync(item.Id, position);
+                await _youtubeSource!.UpdateItemPositionAndNoteInPlaylistAsync(item.Id, position, note);
                 foreach (PlaylistItem itemPosition in items.Where(i => i.Position < item.Position))
                     itemPosition.Position++;
             }
