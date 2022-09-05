@@ -2,7 +2,7 @@ name: Sort Youtube Playlist
 
 on:
   schedule:
-    - cron: '0 3 * * *'
+    - cron: '0 0 * * *'
 
 jobs:
   sort:
