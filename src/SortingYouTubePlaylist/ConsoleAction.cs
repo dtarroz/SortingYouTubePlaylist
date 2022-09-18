@@ -44,11 +44,12 @@ internal static class ConsoleAction
     }
 
     private static async Task<int> UpdateItemPositionsAsync(List<PlaylistItem> items) {
-        if (items.Count < 6)
+        const int notChangeCount = 3;
+        if (items.Count < notChangeCount + 2)
             return 0;
-        string channelId = items[3].Video.ChannelId;
-        string? note = items[3].Note;
-        items = items.Skip(4).ToList();
+        string channelId = items[notChangeCount - 1].Video.ChannelId;
+        string? note = items[notChangeCount - 1].Note;
+        items = items.Skip(notChangeCount).ToList();
         if (note != null)
             while (items.Count > 0 && items[0].Note == note) {
                 channelId = items[0].Video.ChannelId;
@@ -58,14 +59,27 @@ internal static class ConsoleAction
         int countPositionChanged = 0;
         PlaylistItem? item;
         DateTime thresholdDate = DateTime.Now.AddMonths(-1);
+        List<string> notes = new List<string>();
+        if (note != null)
+            notes.Add(note);
         while (items.Count > 0) {
             List<PlaylistItem> nextItems = items.Where(i => i.Video.ChannelId != channelId).ToList();
-            if (count < 3) {
-                item = count == 0 ? nextItems.Where(i => i.PublishedAt.CompareTo(thresholdDate) < 0).MinBy(i => i.Video.Duration) : null;
+            if (count < 4) {
+                item = null;
+                if (count == 0) {
+                    note = null;
+                    item = nextItems.Where(i => i.PublishedAt.CompareTo(thresholdDate) < 0).MinBy(i => i.Video.Duration);
+                    if (item == null)
+                        count++;
+                }
                 item ??= nextItems.MinBy(i => i.Video.Duration);
                 item ??= items.MinBy(i => i.Video.Duration);
-                if (count == 0)
+                if (note == null) {
                     note = item!.Note ?? Guid.NewGuid().ToString();
+                    if (notes.Contains(note))
+                        note = Guid.NewGuid().ToString();
+                    notes.Add(note);
+                }
                 count++;
             }
             else {
