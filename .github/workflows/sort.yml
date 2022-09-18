@@ -38,5 +38,9 @@ jobs:
         json: ${{ secrets.TOKEN_RESPONSE_JSON }}
     - name: Sort PLaylist "En pause"
       run: dotnet run --project SortingYouTubePlaylist -- sort -p ${{ secrets.PLAYLIST_EN_PAUSE }}
+    - name: List PLaylist "En pause"
+      run: dotnet run --project SortingYouTubePlaylist -- list -p ${{ secrets.PLAYLIST_EN_PAUSE }}
     - name: Sort PLaylist "En cours"
       run: dotnet run --project SortingYouTubePlaylist -- sort -p ${{ secrets.PLAYLIST_EN_COURS }}
+    - name: List PLaylist "En cours"
+      run: dotnet run --project SortingYouTubePlaylist -- list -p ${{ secrets.PLAYLIST_EN_COURS }}
