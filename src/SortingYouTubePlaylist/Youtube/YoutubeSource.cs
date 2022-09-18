@@ -99,8 +99,10 @@ internal sealed class YoutubeSource
                 VideoId = item.Snippet.ResourceId.VideoId
             },
             Video = new PlaylistItemVideo {
-                Duration = await GetDurationAsync(item.Snippet.ResourceId.VideoId),
-                ChannelId = item.Snippet.VideoOwnerChannelId
+                Title = item.Snippet.Title,
+                Channel = item.Snippet.VideoOwnerChannelTitle,
+                ChannelId = item.Snippet.VideoOwnerChannelId,
+                Duration = await GetDurationAsync(item.Snippet.ResourceId.VideoId)
             },
             PublishedAt = item.Snippet.PublishedAt ?? throw new InvalidOperationException(),
             Position = item.Snippet.Position ?? throw new InvalidOperationException(),

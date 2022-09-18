@@ -14,6 +14,9 @@ internal static class ConsoleAction
             case "sort":
                 await SortingPlaylist(consoleArgument);
                 break;
+            case "list":
+                await ListPlaylist(consoleArgument);
+                break;
             default: throw new Exception("Action non trouvée");
         }
     }
@@ -81,5 +84,13 @@ internal static class ConsoleAction
             }
         }
         return countPositionChanged;
+    }
+
+    private static async Task ListPlaylist(ConsoleArgument consoleArgument) {
+        Console.WriteLine("Récupération des informations sur les vidéos de la liste de lecture...");
+        List<PlaylistItem> items = await _youtubeSource!.GetItemsFromPlaylistAsync(consoleArgument.PlaylistId!);
+        foreach (PlaylistItem item in items)
+            Console.WriteLine($"{item.Video.Title} [{item.Id.VideoId}] | {item.Video.Duration} | {item.Video.Channel}");
+        Console.WriteLine("Fait");
     }
 }

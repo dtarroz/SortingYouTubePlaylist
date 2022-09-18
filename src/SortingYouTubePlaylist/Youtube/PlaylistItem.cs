@@ -19,6 +19,8 @@ internal sealed class PlaylistItemId
 
 internal sealed class PlaylistItemVideo
 {
+    public string Title { get; set; } = null!;
+    public string Channel { get; set; } = null!;
     public string ChannelId { get; set; } = null!;
     public int Duration { get; set; }
 }
