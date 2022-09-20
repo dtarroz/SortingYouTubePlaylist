@@ -25,6 +25,7 @@ J’ai codé le procédé précédent pour test et je suis tombé sur d’autres
 
 ## Mon algorithme de trie
 Après plusieurs expérimentations, voici mon algorithme de trie actuel.
+
 Le principe de base repose sur la succession de plusieurs groupes de 5 vidéos (```ABCDE```). Chacune de ces vidéos est déterminée par un choix algorithmique selon leur ordre parmi ces 5. 
 
 - Vidéo ```A```
@@ -61,4 +62,17 @@ Pour savoir si une vidéo est dans le même groupe qu’une autre, j’utilise u
 *coming soon*
 
 ## FAQ
-*coming soon*
+**- On peut trier la liste de lecture “A regarder plus tard” ?**
+ 
+> Non, l’API Youtube ne permet pas de récupérer et de modifier la liste de lecture “A regarder plus tard”.
+
+**- Pour quel type de chaîne cet algorithme de trie n’est pas adapté ?**
+
+> Cet algorithme de trie n’est pas adapté pour les types de chaînes suivantes :
+> 
+> - Celles qui font du contenu qui sont à suivre dans un ordre précis
+> - Celles dont on regarde « rapidement » les contenu postés (_seulement si la playlist à trier possède énormément de vidéos_)
+
+**- Pourquoi j’ai l’erreur `Error:"invalid_grant", Description:"Token has been expired or revoked.", Uri:""` au bout de 7 jours ?**
+
+> Un projet Google Cloud Platform avec un écran de consentement OAuth configuré pour un type d'utilisateur externe et dont l'état de publication est "Test" se voit émettre un jeton d'actualisation qui expire dans sept jours.
