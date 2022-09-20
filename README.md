@@ -24,27 +24,30 @@ Après plusieurs mois, ça devenait lassant de toujours s’arrêter après une 
 J’ai codé le procédé précédent pour test et je suis tombé sur d’autres points à améliorer.
 
 ## Mon algorithme de trie
-Le principe de base repose sur la succession de plusieurs groupes de 4 vidéos (```ABCD```). Chacune de ces vidéos est déterminée par un choix algorithmique selon leur ordre parmi ces 4. 
+Après plusieurs expérimentations, voici mon algorithme de trie actuel.
+Le principe de base repose sur la succession de plusieurs groupes de 5 vidéos (```ABCDE```). Chacune de ces vidéos est déterminée par un choix algorithmique selon leur ordre parmi ces 5. 
 
 - Vidéo ```A```
     - Prendre la vidéo la plus courte ajoutée il y a plus d’un mois dans la liste de lecture
-    - Sinon prendre la vidéo la plus courte
+    - Sinon aucune vidéo
 - Vidéo ```B```
     - Prendre la vidéo la plus courte
 - Vidéo ```C```
     - Prendre la vidéo la plus courte
 - Vidéo ```D```
+    - Prendre la vidéo la plus courte
+- Vidéo ```E```
     - Prendre la vidéo la plus ancienne ajoutée dans la liste de lecture
 
-Cela permet de regarder les plus courtes pour diminuer rapidement le nombre de vidéos dans la playlist (```B``` et ```C```), de diminuer les vidéos qui sont présentes de plus d’un mois (```A```) et les plus anciennes qui peuvent avoir des durées plus longues (```D```).
+Cela permet de regarder les plus courtes pour diminuer rapidement le nombre de vidéos dans la playlist (```B```, ```C``` et ```D```), de diminuer les vidéos qui sont présentes de plus d’un mois (```A```) et les plus anciennes qui peuvent avoir des durées plus longues (```E```).
 
 **Des contraintes supplémentaires ont été ajoutées :**
 
 - Les vidéos d’une même chaîne ne se suivent pas dans un groupe mais aussi sur la succession des groupes.
-- S’il ne reste que des vidéos d’une même chaîne à trier, on prend la plus courte pour les vidéos ```A```, ```B``` et ```C```, et la plus ancienne ajoutée pour la vidéo ```D```.
-- Les 4 premières vidéos de la playlist ne sont pas triées. C’est pour éviter de déplacer la vidéo en cours de lecture et des vidéos qui nécessitent une lecture plus confortable _(visionnage sur un autre écran, ne pas être interrompu pendant la lecture, vidéo dans une langue étrangère (sous titre), …)_
-- Si les vidéos qui suivent la zone qui ne bouge pas _(les 4 premiéres vidéos)_ sont du même groupe que la quatrième vidéo, alors on ne touche pas à leur ordre. C’est pour éviter d’avoir toujours une vidéo ```A``` qui entre dans la zone si on ne regarde qu’une vidéo entre chaque trie.
-- Comme il faut au minimum 2 vidéos pour trier et que les 4 premières ne bougent pas, le trie ne fonctionne que si la playlist contient plus de 6 vidéos.
+- S’il ne reste que des vidéos d’une même chaîne à trier, on prend la plus courte pour les vidéos ```B```, ```C``` et ```D```, et la plus ancienne ajoutée pour la vidéo ```E```. La vidéo ```A``` n'est pas utilisé pour ce cas.
+- Les 3 premières vidéos de la playlist ne sont pas triées. C’est pour éviter de déplacer la vidéo en cours de lecture et des vidéos qui nécessitent une lecture plus confortable _(visionnage sur un autre écran, ne pas être interrompu pendant la lecture, vidéo dans une langue étrangère (sous titre), …)_
+- Si les vidéos qui suivent la zone qui ne bouge pas _(les 3 premiéres vidéos)_ sont du même groupe que la troisiéme vidéo, alors on ne touche pas à leur ordre. C’est pour éviter d’avoir toujours une vidéo ```A``` qui entre dans la zone si on ne regarde qu’une vidéo entre chaque trie.
+- Comme il faut au minimum 2 vidéos pour trier et que les 3 premières ne bougent pas, le trie ne fonctionne que si la playlist contient plus de 5 vidéos.
 
 Pour savoir si une vidéo est dans le même groupe qu’une autre, j’utilise une fonctionnalité disparue de l’interface YouTube qui permettait de saisir une « note » sur une vidéo d’une playlist. Cette note est toujours accessible depuis l’API donc je m’en sers pour stocker l’identifiant unique du groupe à laquelle elle appartient.
 
