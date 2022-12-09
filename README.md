@@ -1,13 +1,15 @@
 # Sorting YouTube Playlist
 
-Tri des listes de lecture YouTube (playlists) par leur durée et leur date d'ajout selon un algorthime particulier.
+Tri des listes de lecture YouTube (playlists) par leur durée et leur date d'ajout selon un algorithme particulier.
 
 ## Sommaire
 - [Pourquoi faire ?](#pourquoi-faire-)
 - [Mon algorithme de trie](#mon-algorithme-de-trie)
-- [Getting Started](#getting-started)
-- [Générer le fichier de connexion à votre compte YouTube](#générer-le-fichier-de-connexion-à-votre-compte-youtube)
+- [Comment récupérer ses informations Google Client ID et Client Secret ?](#comment-récupérer-ses-informations-google-client-id-et-client-secret-)
+- [Connexion à son compte Youtube](#connexion-à-son-compte-youtube)
 - [Tri de votre liste de lecture (playlist)](#tri-de-votre-liste-de-lecture-playlist)
+- [Lister les vidéos de la liste de lecture (playlist)](#lister-les-vidéos-de-la-liste-de-lecture-playlist)
+- [Comment je m’en sers ?](#comment-je-m-en-sers-)
 - [FAQ](#faq)
 
 ## Pourquoi faire ?
@@ -52,14 +54,66 @@ Cela permet de regarder les plus courtes pour diminuer rapidement le nombre de v
 
 Pour savoir si une vidéo est dans le même groupe qu’une autre, j’utilise une fonctionnalité disparue de l’interface YouTube qui permettait de saisir une « note » sur une vidéo d’une playlist. Cette note est toujours accessible depuis l’API donc je m’en sers pour stocker l’identifiant unique du groupe à laquelle elle appartient.
 
-## Getting Started
-*coming soon*
+## Comment récupérer ses informations Google Client ID et Client Secret ?
+Vous avez besoin des informations Google Client ID et Client Secret pour utiliser l’API de Youtube. Vous devez vous créer un compte ([Google Developers Console](https://console.developers.google.com/apis)) et le configurer pour pouvoir télécharger le fichier « client_secret.json »
 
-## Générer le fichier de connexion à votre compte YouTube
-*coming soon*
+## Connexion à son compte Youtube
+Pour se connecter à son compte YouTube. Lancer la commande suivante :
+
+```cmd
+SortingYoutubePlaylist authorize
+```
+
+Il va ouvrir une page dans le navigateur pour vous demandez de vous connecter à votre compte YouTube. 
+Après la connexion, vous pouvez fermer la page du navigateur. Vous aurez vos informations (tokens) de connexion qui serviront ensuite pour trier vos listes de lecture. Par défaut, il sera contenu dans le répertoire ```youtube-data-store```.
+
+**Paramètres complémentaires :**
+ - -c : le nom du fichier contenant votre Google Client ID et Client Secret. Par défaut la valeur est ```client_secret.json```.
+ - -d : le nom du répertoire qui va contenir vos informations de compte YouTube après la connexion. Par défaut la valeur est ```youtube-data-store```.
 
 ## Tri de votre liste de lecture (playlist)
-*coming soon*
+Premièrement, vous avez besoin de l’identifiant de votre liste de lecture.
+Pour faire simple, aller depuis un navigateur sur votre liste de lecture et récupérer la valeur dans l’URL qui correspond au paramètre ```list```. 
+
+Vous devez préalablement vous connecter à votre compte YouTube avant de procéder au trie ([Connexion à son compte Youtube](#connexion-à-son-compte-youtube)).
+
+Lancer la commande suivante :
+
+```cmd
+SortingYoutubePlaylist sort -p <MON_ID_PLAYLIST>
+```
+
+Il va récupérer les informations de toutes les vidéos de la liste de lecture puis il va trier ses vidéos selon l’algorithme expliqué précédemment.  
+Aucune vidéo ne sera supprimé pendant le processus, seulement l’ordre d’affichage « manuel ». 
+
+**Paramètres complémentaires :**
+ - -c : le nom du fichier contenant votre Google Client ID et Client Secret. Par défaut la valeur est ```client_secret.json```.
+ - -d : le nom du répertoire contenant vos informations de compte YouTube. Par défaut la valeur est ```youtube-data-store```.
+
+## Lister les vidéos de la liste de lecture (playlist)
+Premièrement, vous avez besoin de l’identifiant de votre liste de lecture.
+Pour faire simple, aller depuis un navigateur sur votre liste de lecture et récupérer la valeur dans l’URL qui correspond au paramètre ```list```. 
+
+Vous devez préalablement vous connecter à votre compte YouTube avant de procéder au trie ([Connexion à son compte Youtube](#connexion-à-son-compte-youtube)).
+
+Lancer la commande suivante :
+
+```cmd
+SortingYoutubePlaylist list -p <MON_ID_PLAYLIST>
+```
+
+Il va récupérer les informations de toutes les vidéos de la liste de lecture puis il va afficher des informations simplifiées de celles ci. 
+
+**Paramètres complémentaires :**
+ - -c : le nom du fichier contenant votre Google Client ID et Client Secret. Par défaut la valeur est ```client_secret.json```.
+ - -d : le nom du répertoire contenant vos informations de compte YouTube. Par défaut la valeur est ```youtube-data-store```.
+
+## Comment je m’en sers ?
+- je me suis crée un compte Google Developper avec une application de test, juste pour avoir le fichier ```client_secret.json```. C’est juste pour un usage personnel.
+- J’ai lancé la connexion à mon compte YouTube depuis mon poste de travail pour récupérer les tokens de connexion (```youtube-data-store```).
+- J’ai configuré Github Actions pour qu’il compile et exécute l’application pour lancer automatiquement le trie de mes listes de lecture durant chaque nuit.
+- J’utilise les Github Secrets pour contenir le fichier ```client_secret.json```, les tokens de connexions (```youtube-data-store```) et les identifiants des listes de lectures.
+- A ce stade, il me trie mes listes de lecture chaque nuit automatiquement mais que pendant 7 jours car j’ai une configuration de « Test » pour l’API YouTube. Solution pour mettre à jour les tokens de connexion chaque semaine : Utiliser Raccourcie d'iOS pour me connecter de nouveau à mon compte YouTube et mettre à jour le Github Secret associé.
 
 ## FAQ
 **- On peut trier la liste de lecture “A regarder plus tard” ?**
