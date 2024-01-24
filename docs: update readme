@@ -28,7 +28,7 @@ J’ai codé le procédé précédent pour test et je suis tombé sur d’autres
 ## Mon algorithme de trie
 Après plusieurs expérimentations, voici mon algorithme de trie actuel.
 
-Le principe de base repose sur la succession de plusieurs groupes de 5 vidéos (```ABCDE```). Chacune de ces vidéos est déterminée par un choix algorithmique selon leur ordre parmi ces 5. 
+Le principe de base repose sur la succession de plusieurs groupes de 6 vidéos (```ABCDE```). Chacune de ces vidéos est déterminée par un choix algorithmique selon leur ordre parmi ces 5. 
 
 - Vidéo ```A```
     - Prendre la vidéo la plus courte ajoutée il y a plus d’un mois dans la liste de lecture
