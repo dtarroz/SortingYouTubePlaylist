@@ -64,13 +64,18 @@ internal static class ConsoleAction
             notes.Add(note);
         while (items.Count > 0) {
             List<PlaylistItem> nextItems = items.Where(i => i.Video.ChannelId != channelId).ToList();
-            if (count < 4) {
+            if (count < 5) {
                 item = null;
                 if (count == 0) {
                     note = null;
                     item = nextItems.Where(i => i.PublishedAt.CompareTo(thresholdDate) < 0).MinBy(i => i.Video.Duration);
                     if (item == null)
                         count++;
+                }
+                if (count == 3) {
+                    item = nextItems.Where(i => i.PublishedAt.CompareTo(thresholdDate) < 0).MaxBy(i => i.Video.Duration);
+                    item ??= nextItems.MaxBy(i => i.Video.Duration);
+                    item ??= items.MaxBy(i => i.Video.Duration);
                 }
                 item ??= nextItems.MinBy(i => i.Video.Duration);
                 item ??= items.MinBy(i => i.Video.Duration);
