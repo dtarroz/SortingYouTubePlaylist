@@ -28,7 +28,7 @@ J’ai codé le procédé précédent pour test et je suis tombé sur d’autres
 ## Mon algorithme de trie
 Après plusieurs expérimentations, voici mon algorithme de trie actuel.
 
-Le principe de base repose sur la succession de plusieurs groupes de 6 vidéos (```ABCDE```). Chacune de ces vidéos est déterminée par un choix algorithmique selon leur ordre parmi ces 5. 
+Le principe de base repose sur la succession de plusieurs groupes de 6 vidéos (```ABCDEF```). Chacune de ces vidéos est déterminée par un choix algorithmique selon leur ordre parmi ces 6. 
 
 - Vidéo ```A```
     - Prendre la vidéo la plus courte ajoutée il y a plus d’un mois dans la liste de lecture
@@ -38,16 +38,18 @@ Le principe de base repose sur la succession de plusieurs groupes de 6 vidéos (
 - Vidéo ```C```
     - Prendre la vidéo la plus courte
 - Vidéo ```D```
-    - Prendre la vidéo la plus courte
+    - Prendre la vidéo la plus longue ajoutée il y a plus d'un mois dans la liste de lecture
 - Vidéo ```E```
+    - Prendre la vidéo la plus courte
+- Vidéo ```F```
     - Prendre la vidéo la plus ancienne ajoutée dans la liste de lecture
 
-Cela permet de regarder les plus courtes pour diminuer rapidement le nombre de vidéos dans la playlist (```B```, ```C``` et ```D```), de diminuer les vidéos qui sont présentes de plus d’un mois (```A```) et les plus anciennes qui peuvent avoir des durées plus longues (```E```).
+Cela permet de regarder les plus courtes pour diminuer rapidement le nombre de vidéos dans la playlist (```B```, ```C``` et ```E```), de diminuer les vidéos qui sont présentes de plus d’un mois (```A``` et ```D```) et les plus anciennes (```F```).
 
 **Des contraintes supplémentaires ont été ajoutées :**
 
 - Les vidéos d’une même chaîne ne se suivent pas dans un groupe mais aussi sur la succession des groupes.
-- S’il ne reste que des vidéos d’une même chaîne à trier, on prend la plus courte pour les vidéos ```B```, ```C``` et ```D```, et la plus ancienne ajoutée pour la vidéo ```E```. La vidéo ```A``` n'est pas utilisé pour ce cas.
+- S’il ne reste que des vidéos d’une même chaîne à trier, on prend la plus courte pour les vidéos ```B```, ```C``` et ```E```, la plus longue pour ```D``` et la plus ancienne ajoutée pour la vidéo ```F```. La vidéo ```A``` n'est pas utilisé pour ce cas.
 - Les 3 premières vidéos de la playlist ne sont pas triées. C’est pour éviter de déplacer la vidéo en cours de lecture et des vidéos qui nécessitent une lecture plus confortable _(visionnage sur un autre écran, ne pas être interrompu pendant la lecture, vidéo dans une langue étrangère (sous titre), …)_
 - Si les vidéos qui suivent la zone qui ne bouge pas _(les 3 premiéres vidéos)_ sont du même groupe que la troisiéme vidéo, alors on ne touche pas à leur ordre. C’est pour éviter d’avoir toujours une vidéo ```A``` qui entre dans la zone si on ne regarde qu’une vidéo entre chaque trie.
 - Comme il faut au minimum 2 vidéos pour trier et que les 3 premières ne bougent pas, le trie ne fonctionne que si la playlist contient plus de 5 vidéos.
