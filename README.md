@@ -4,7 +4,7 @@ Tri des listes de lecture YouTube (playlists) par leur durée et leur date d'ajo
 
 ## Sommaire
 - [Pourquoi faire ?](#pourquoi-faire-)
-- [Mon algorithme de trie](#mon-algorithme-de-trie)
+- [Mon algorithme de tri](#mon-algorithme-de-tri)
 - [Comment récupérer ses informations Google Client ID et Client Secret ?](#comment-récupérer-ses-informations-google-client-id-et-client-secret-)
 - [Connexion à son compte Youtube](#connexion-à-son-compte-youtube)
 - [Tri de votre liste de lecture (playlist)](#tri-de-votre-liste-de-lecture-playlist)
@@ -25,8 +25,8 @@ Après plusieurs mois, ça devenait lassant de toujours s’arrêter après une 
 
 J’ai codé le procédé précédent pour test et je suis tombé sur d’autres points à améliorer.
 
-## Mon algorithme de trie
-Après plusieurs expérimentations, voici mon algorithme de trie actuel.
+## Mon algorithme de tri
+Après plusieurs expérimentations, voici mon algorithme de tri actuel.
 
 Le principe de base repose sur la succession de plusieurs groupes de 6 vidéos (```ABCDEF```). Chacune de ces vidéos est déterminée par un choix algorithmique selon leur ordre parmi ces 6. 
 
@@ -51,8 +51,8 @@ Cela permet de regarder les plus courtes pour diminuer rapidement le nombre de v
 - Les vidéos d’une même chaîne ne se suivent pas dans un groupe mais aussi sur la succession des groupes.
 - S’il ne reste que des vidéos d’une même chaîne à trier, on prend la plus courte pour les vidéos ```B```, ```C``` et ```E```, la plus longue pour ```D``` et la plus ancienne ajoutée pour la vidéo ```F```. La vidéo ```A``` n'est pas utilisé pour ce cas.
 - Les 3 premières vidéos de la playlist ne sont pas triées. C’est pour éviter de déplacer la vidéo en cours de lecture et des vidéos qui nécessitent une lecture plus confortable _(visionnage sur un autre écran, ne pas être interrompu pendant la lecture, vidéo dans une langue étrangère (sous titre), …)_
-- Si les vidéos qui suivent la zone qui ne bouge pas _(les 3 premiéres vidéos)_ sont du même groupe que la troisiéme vidéo, alors on ne touche pas à leur ordre. C’est pour éviter d’avoir toujours une vidéo ```A``` qui entre dans la zone si on ne regarde qu’une vidéo entre chaque trie.
-- Comme il faut au minimum 2 vidéos pour trier et que les 3 premières ne bougent pas, le trie ne fonctionne que si la playlist contient plus de 5 vidéos.
+- Si les vidéos qui suivent la zone qui ne bouge pas _(les 3 premiéres vidéos)_ sont du même groupe que la troisiéme vidéo, alors on ne touche pas à leur ordre. C’est pour éviter d’avoir toujours une vidéo ```A``` qui entre dans la zone si on ne regarde qu’une vidéo entre chaque tri.
+- Comme il faut au minimum 2 vidéos pour trier et que les 3 premières ne bougent pas, le tri ne fonctionne que si la playlist contient plus de 5 vidéos.
 
 Pour savoir si une vidéo est dans le même groupe qu’une autre, j’utilise une fonctionnalité disparue de l’interface YouTube qui permettait de saisir une « note » sur une vidéo d’une playlist. Cette note est toujours accessible depuis l’API donc je m’en sers pour stocker l’identifiant unique du groupe à laquelle elle appartient.
 
@@ -77,7 +77,7 @@ Après la connexion, vous pouvez fermer la page du navigateur. Vous aurez vos in
 Premièrement, vous avez besoin de l’identifiant de votre liste de lecture.
 Pour faire simple, aller depuis un navigateur sur votre liste de lecture et récupérer la valeur dans l’URL qui correspond au paramètre ```list```. 
 
-Vous devez préalablement vous connecter à votre compte YouTube avant de procéder au trie ([Connexion à son compte Youtube](#connexion-à-son-compte-youtube)).
+Vous devez préalablement vous connecter à votre compte YouTube avant de procéder au tri ([Connexion à son compte Youtube](#connexion-à-son-compte-youtube)).
 
 Lancer la commande suivante :
 
@@ -96,7 +96,7 @@ Aucune vidéo ne sera supprimé pendant le processus, seulement l’ordre d’af
 Premièrement, vous avez besoin de l’identifiant de votre liste de lecture.
 Pour faire simple, aller depuis un navigateur sur votre liste de lecture et récupérer la valeur dans l’URL qui correspond au paramètre ```list```. 
 
-Vous devez préalablement vous connecter à votre compte YouTube avant de procéder au trie ([Connexion à son compte Youtube](#connexion-à-son-compte-youtube)).
+Vous devez préalablement vous connecter à votre compte YouTube avant de procéder au tri ([Connexion à son compte Youtube](#connexion-à-son-compte-youtube)).
 
 Lancer la commande suivante :
 
@@ -113,7 +113,7 @@ Il va récupérer les informations de toutes les vidéos de la liste de lecture 
 ## Comment je m’en sers ?
 - je me suis crée un compte Google Developper avec une application de test, juste pour avoir le fichier ```client_secret.json```. C’est juste pour un usage personnel.
 - J’ai lancé la connexion à mon compte YouTube depuis mon poste de travail pour récupérer les tokens de connexion (```youtube-data-store```).
-- J’ai configuré Github Actions pour qu’il compile et exécute l’application pour lancer automatiquement le trie de mes listes de lecture durant chaque nuit.
+- J’ai configuré Github Actions pour qu’il compile et exécute l’application pour lancer automatiquement le tri de mes listes de lecture durant chaque nuit.
 - J’utilise les Github Secrets pour contenir le fichier ```client_secret.json```, les tokens de connexions (```youtube-data-store```) et les identifiants des listes de lectures.
 - A ce stade, il me trie mes listes de lecture chaque nuit automatiquement mais que pendant 7 jours car j’ai une configuration de « Test » pour l’API YouTube. Solution pour mettre à jour les tokens de connexion chaque semaine : Utiliser Raccourcie d'iOS pour me connecter de nouveau à mon compte YouTube et mettre à jour le Github Secret associé.
 
@@ -122,9 +122,9 @@ Il va récupérer les informations de toutes les vidéos de la liste de lecture 
  
 > Non, l’API Youtube ne permet pas de récupérer et de modifier la liste de lecture “A regarder plus tard”.
 
-**- Pour quel type de chaîne cet algorithme de trie n’est pas adapté ?**
+**- Pour quel type de chaîne cet algorithme de tri n’est pas adapté ?**
 
-> Cet algorithme de trie n’est pas adapté pour les types de chaînes suivantes :
+> Cet algorithme de tri n’est pas adapté pour les types de chaînes suivantes :
 > 
 > - Celles qui font du contenu qui sont à suivre dans un ordre précis
 > - Celles dont on regarde « rapidement » les contenu postés (_seulement si la playlist à trier possède énormément de vidéos_)
