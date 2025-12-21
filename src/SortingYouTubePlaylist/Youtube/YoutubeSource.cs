@@ -112,7 +112,10 @@ internal sealed class YoutubeSource
 
     private async Task<int> GetDurationAsync(string videoId) {
         Video video = await GetVideoAsync(videoId);
-        return Convert.ToInt32(XmlConvert.ToTimeSpan(video.ContentDetails.Duration).TotalSeconds);
+        /* use because 99 for video 'À venir' */
+        return Convert.ToInt32(string.IsNullOrEmpty(video.ContentDetails.Duration)
+                                   ? TimeSpan.FromHours(99).TotalSeconds
+                                   : XmlConvert.ToTimeSpan(video.ContentDetails.Duration).TotalSeconds);
     }
 
     private async Task<Video> GetVideoAsync(string videoId) {
@@ -134,9 +137,7 @@ internal sealed class YoutubeSource
                 },
                 Position = position
             },
-            ContentDetails = new PlaylistItemContentDetails {
-                Note = note 
-            }
+            ContentDetails = new PlaylistItemContentDetails { Note = note }
         };
         var update = _youtubeService!.PlaylistItems.Update(item, "snippet,contentDetails");
         await update.ExecuteAsync();
